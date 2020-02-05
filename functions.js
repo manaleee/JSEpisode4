@@ -7,9 +7,13 @@
  ****************************************************************/
 function getBookById(bookId, books) {
   // Your code goes here
+
+  // book.id --> from books.id
+
+  return books.find(book => book.id === bookId);
 }
 
-/**************************************************************
+/***********************************************************************************************************************************
  * getAuthorByName(authorName, authors):
  * - receives an authorName
  * - recieves an array of author objects
@@ -18,9 +22,13 @@ function getBookById(bookId, books) {
  ****************************************************************/
 function getAuthorByName(authorName, authors) {
   // Your code goes here
+
+  return authors.find(
+    author => author.name.toLowerCase() === authorName.toLowerCase()
+  );
 }
 
-/**************************************************************
+/**************************************************************************************************************************************
  * bookCountsByAuthor(authors):
  * - receives an array of authors
  * - returns an array of objects with the format:
@@ -28,9 +36,16 @@ function getAuthorByName(authorName, authors) {
  ****************************************************************/
 function bookCountsByAuthor(authors) {
   // Your code goes here
+
+  return authors.map(author => {
+    return {
+      author: author.name,
+      bookCount: author.books.length
+    };
+  });
 }
 
-/**************************************************************
+/*****************************************************************************************************************************************
  * booksByColor(books):
  * - receives an array of books
  * - returns an object where the keys are colors
@@ -42,10 +57,18 @@ function booksByColor(books) {
 
   // Your code goes here
 
+  books.forEach(book => {
+    if (!colors[book.color]) {
+      colors[book.color] = [book.title];
+    } else {
+      colors[book.color].push(book.title);
+    }
+  });
+
   return colors;
 }
 
-/**************************************************************
+/*********************************************************************************************************************************
  * titlesByAuthorName(authorName, authors, books):
  * - receives an authorName
  * - recieves an array of author objects
@@ -55,9 +78,16 @@ function booksByColor(books) {
  ****************************************************************/
 function titlesByAuthorName(authorName, authors, books) {
   // Your code goes here
+
+  const author = getAuthorByName(authorName, authors);
+
+  if (!author) {
+    return [];
+  }
+  return author.books.map(bookId => getBookById(bookId, books).title);
 }
 
-/**************************************************************
+/*********************************************************************************************************************************
  * mostProlificAuthor(authors):
  * - receives a list of authors
  * - returns the name of the author with the most books
@@ -66,9 +96,17 @@ function titlesByAuthorName(authorName, authors, books) {
  ****************************************************************/
 function mostProlificAuthor(authors) {
   // Your code goes here
+
+  let prolific = authors[0];
+
+  authors.forEach(author => {
+    if (author.books.length > prolific.books.length) prolific = author;
+  });
+
+  return prolific.name;
 }
 
-/**************************************************************
+/************************************************************************************************************************************
  * relatedBooks(bookId, authors, books):
  * - receives a bookId
  * - receives a list of authors
@@ -95,7 +133,7 @@ function relatedBooks(bookId, authors, books) {
   // Your code goes here
 }
 
-/**************************************************************
+/*****************************************************************************************************************************************
  * friendliestAuthor(authors):
  * - receives a list of authors
  * - returns the name of the author that has
@@ -104,6 +142,8 @@ function relatedBooks(bookId, authors, books) {
 function friendliestAuthor(authors) {
   // Your code goes here
 }
+
+// *************************************** call function *************************************************************************
 
 module.exports = {
   getBookById,
